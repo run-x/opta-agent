@@ -1,0 +1,32 @@
+[tool.black]
+line-length = 120
+target-version = ['py38']
+exclude = '''
+(
+    .*\/migrations\/.*
+    | env\/.*
+    | .*\/node_modules\/.*
+)
+'''
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 120
+skip_glob = ['**/migrations/**']
+
+[tool.coverage.run]
+command_line = "-m pytest"
+omit = [
+    "*/migrations/*",
+    "env/*",
+    "*/tests/*",
+    "*/virtualenvs/*",
+]
+
+[tool.coverage.report]
+fail_under = 80.0
+skip_empty = true
+show_missing = true
