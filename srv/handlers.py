@@ -9,12 +9,16 @@ if os.environ.get("OPTA_STAGING"):
 else:
     OPTA_DOMAIN = "api.app.runx.dev"
 
+OPTA_TOKEN = os.environ.get("OPTA_TOKEN", "MISSING")
+
 
 def is_opta_pod(labels):
     return labels["opta-manage"] is not None
 
 
 async def fetch_jwt(api_key: str) -> Tuple[dict, str]:
+    if api_key == "MISSING":
+        raise Exception("OPTA_TOKEN is not set")
     async with aiohttp.ClientSession() as session:
         # TODO: add opta auth token
         async with session.post(f"https://{OPTA_DOMAIN}/user/apikeys/validate", json={"api_key": api_key}) as resp:
@@ -47,7 +51,7 @@ questions:
 
 async def send_http_request(body):
     async with aiohttp.ClientSession() as session:
-        _, jwt = await fetch_jwt("TODO: get api token")
+        _, jwt = await fetch_jwt(OPTA_TOKEN)
         # TODO: add opta auth token
         async with session.put(f"https://{OPTA_DOMAIN}/pods", json=body, headers={"opta": jwt}) as resp:
             return resp.json()
@@ -55,24 +59,29 @@ async def send_http_request(body):
 
 @kopf.on.create("pods")
 async def create_opta_ui_pod(uid, meta, labels, spec, **kwargs):
+    print("on create:", uid, meta, labels, spec, kwargs)
     if not is_opta_pod(labels):
+        print(f"{uid} is opta pod")
         return
-    print("on create:", uid)
+    print(f"{uid} is not opta pod")
     pass
 
 
 @kopf.on.update("pods")
 async def update_opta_ui_pod(uid, meta, labels, **kwargs):
+    print("on update:", uid, meta, labels, kwargs)
     if not is_opta_pod(labels):
+        print(f"{uid} is opta pod")
         return
-    print("on update:", uid)
+    print(f"{uid} is not opta pod")
     pass
 
 
 @kopf.on.delete("pods")
 async def delete_opta_ui_pod(uid, meta, labels, **kwargs):
+    print("on delete:", uid, meta, labels, kwargs)
     if not is_opta_pod(labels):
+        print(f"{uid} is opta pod")
         return
-
-    print("on delete:", uid)
+    print(f"{uid} is not opta pod")
     pass
