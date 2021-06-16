@@ -24,7 +24,7 @@ jobs:
           pipenv install --deploy --dev
       - name: Test with pytest
         run: |
-          pipenv run coverag__init__.pye run
+          pipenv run coverage run
         env:
           PYTHONPATH: $(pwd)
 
