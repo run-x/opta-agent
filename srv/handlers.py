@@ -13,7 +13,7 @@ OPTA_TOKEN = os.environ.get("OPTA_TOKEN", "MISSING")
 
 
 def is_opta_pod(labels):
-    return labels["opta-manage"] is not None
+    return labels.get("opta-manage") is not None
 
 
 async def fetch_jwt(api_key: str) -> Tuple[dict, str]:
