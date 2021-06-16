@@ -1,92 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "k8s-service.fullname" . }}
+  name: {{ include "opta-agent.fullname" . }}
   labels:
-    tags.datadoghq.com/service: {{ include "k8s-service.serviceName" . }}-{{ include "k8s-service.namespaceName" . }}
-    tags.datadoghq.com/version: {{ .Values.version | quote }}
-  {{- include "k8s-service.labels" . | nindent 4 }}
-  namespace: {{ include "k8s-service.namespaceName" . }}
+    {{- include "opta-agent.labels" . | nindent 4 }}
+  namespace: {{ include "opta-agent.namespaceName" . }}
 spec:
+  replicas: 1 # TODO: figure out HA by fixing kopf: https://kopf.readthedocs.io/en/latest/deployment/
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-  {{- include "k8s-service.selectorLabels" . | nindent 6 }}
+  {{- include "opta-agent.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "k8s-service.selectorLabels" . | nindent 8 }}
-        {{- include "k8s-service.optaLabels" . | nindent 8 }}
+        {{- include "opta-agent.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "k8s-service.serviceName" . }}
+      serviceAccountName: {{ include "opta-agent.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image }}"
+          image: "{{ .Values.optaAgent.image }}"
           imagePullPolicy: Always
-          volumeMounts:
-            - name: config
-              mountPath: "/config"
-              readOnly: true
           ports:
             - name: main
               protocol: TCP
-              {{- if hasKey .Values.port "http" }}
-              containerPort: {{ .Values.port.http }}
-              {{- end }}
-              {{- if hasKey .Values.port "tcp" }}
-              containerPort: {{ .Values.port.tcp }}
-              {{- end }}
-              {{- if hasKey .Values.port "grpc" }}
-              containerPort: {{ .Values.port.grpc }}
-          {{- end }}
+              containerPort: 8080
           env:
-            - name: RDS_CA_PATH # This is the path to the public key for the docdb tls
-              value: "/config/rds_ca.pem"
-            {{ range .Values.envVars }}
-            - name: {{ .name | quote }}
-              value: {{ .value | quote }}
-            {{ end }}
-            {{ range $val := .Values.linkSecrets }}
-            - name: {{ $val.name | quote }}
+            - name: OPTA_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: secret
-                  key: {{ $val.name | quote }}
-            {{ end }}
-            {{ range $val := .Values.manualSecrets }}
-            - name: {{ $val | quote }}
-              valueFrom:
-                secretKeyRef:
-                  name: manual-secrets
-                  key: {{ $val | quote }}
-          {{ end }}
+                  name: opta-secrets
+                  key: token
           {{/* No probes for grpc at the moment */}}
-          {{ if not (hasKey .Values.port "grpc") }}
           livenessProbe:
             initialDelaySeconds: 30
-            {{ if hasKey .Values.port "tcp" }}
-            tcpSocket:
-              port: main
-            {{ end }}
-            {{- if hasKey .Values.port "http" }}
             httpGet:
-              port: main
-              path: {{ .Values.livenessProbePath }}
-          {{ end }}
+              path: /healthz
+              port: 8080
           readinessProbe:
-            initialDelaySeconds: 30
+            initialDelaySeconds: 20
             periodSeconds: 10
-            {{ if hasKey .Values.port "tcp" }}
-            tcpSocket:
-              port: main
-            {{ end }}
-            {{- if hasKey .Values.port "http" }}
             httpGet:
-              port: main
-              path: {{ .Values.readinessProbePath }}
-          {{ end }}
-          {{ end }}
+              path: /healthz
+              port: 8080
           resources:
             limits:
-            {{- toYaml .Values.containerResourceLimits | nindent 14 }}
+            {{- toYaml .Values.optaAgent.containerResourceLimits | nindent 14 }}
             requests:
-      {{- toYaml .Values.containerResourceRequests | nindent 14 }}
+      {{- toYaml .Values.optaAgent.containerResourceRequests | nindent 14 }}

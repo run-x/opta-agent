@@ -1,3 +1,11 @@
 optaAgent:
-  optaToken: ""
+  namespace: "opta-agent"
+  token: nil
+  image: "runx1/opta-agent:latest"
+  containerResourceRequests:
+    cpu: 100m
+    memory: 128Mi
+  containerResourceLimits:
+    cpu: 200m
+    memory: 256Mi
 

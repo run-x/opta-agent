@@ -60,4 +60,7 @@ jobs:
       - name: Build image
         run: docker build -t runx1/opta-agent:${{ github.sha }} -f Dockerfile .
       - name: Push image
-        run: docker push runx1/opta-agent:${{ github.sha }}
+        run: |
+          docker push runx1/opta-agent:${{ github.sha }}
+          docker tag runx1/opta-agent:${{ github.sha }} runx1/opta-agent:latest
+          docker push runx1/opta-agent:latest

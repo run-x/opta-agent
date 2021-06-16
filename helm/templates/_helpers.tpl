@@ -36,7 +36,6 @@ Common labels
 {{- define "opta-agent.labels" -}}
 helm.sh/chart: {{ include "opta-agent.chart" . }}
 {{ include "opta-agent.selectorLabels" . }}
-{{ include "opta-agent.optaLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -51,18 +50,8 @@ app.kubernetes.io/name: {{ include "opta-agent.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "opta-agent.optaLabels" -}}
-opta.dev/module-name: {{ .Values.moduleName }}
-opta.dev/layer-name: {{ .Values.layerName }}
-opta.dev/environment-name: {{ .Values.environmentName }}
-{{- end }}
-
 {{/*Namespace name*/}}
 {{- define "opta-agent.namespaceName" -}}
-{{- .Values.layerName }}
-{{- end }}
-{{/*Service name*/}}
-{{- define "opta-agent.serviceName" -}}
-{{- .Values.moduleName }}
+{{- .Values.optaAgent.namespace }}
 {{- end }}
 
