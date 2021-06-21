@@ -14,6 +14,7 @@ rules:
       - replicasets
       - statefulsets
     verbs:
+      - patch
       - list
       - get
       - watch
