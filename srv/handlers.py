@@ -5,7 +5,7 @@ from typing import Dict, Optional, Tuple
 import aiohttp
 import kopf
 
-OPTA_DOMAIN = "api.staging.runx.dev"
+OPTA_DOMAIN = "api.app.runx.dev"
 
 OPTA_TOKEN = os.environ.get("OPTA_TOKEN", "MISSING")
 
