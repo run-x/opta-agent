@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import aiohttp
 import kopf
@@ -150,7 +150,7 @@ async def create_opta_ui_pod(uid, status, labels, logger, **_):
             created_at=created_at or datetime.now().isoformat(),
             updated_at=datetime.now().isoformat(),
         )
-    except:
+    except Exception:
         logger.info(f"Failed to create pod {uid}")
 
 
@@ -174,7 +174,7 @@ async def update_opta_ui_pod_status(uid, status, labels, logger, new, **_):
             created_at=created_at or datetime.now().isoformat(),
             updated_at=datetime.now().isoformat(),
         )
-    except:
+    except Exception:
         logger.info(f"Failed to update pod {uid}")
 
 
@@ -199,7 +199,7 @@ async def delete_opta_ui_pod(uid, logger, labels, status, **_):
             updated_at=datetime.now().isoformat(),
             deleted_at=datetime.now().isoformat(),
         )
-    except:
+    except Exception:
         logger.info(f"Failed to delete pod {uid}")
 
 
