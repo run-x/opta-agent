@@ -131,31 +131,8 @@ def get_pod_created_time_from_status(status):
     return None
 
 
-@kopf.on.create("pods")
-async def create_opta_ui_pod(uid, status, labels, logger, **_):
-    if not is_valid_opta_pod(labels):
-        return
-    try:
-        environment_name = labels.get("opta.dev/environment-name")
-        service_name = labels.get("opta.dev/layer-name")
-
-        service = await get_service(environment_name, service_name)
-        service_id = service["id"]
-        created_at = get_pod_created_time_from_status(status)
-        await update_pod(
-            pod_id=uid,
-            status=status.get("phase"),
-            service_id=service_id,
-            image=get_image_from_status(status),
-            created_at=created_at or datetime.now().isoformat(),
-            updated_at=datetime.now().isoformat(),
-        )
-    except Exception:
-        logger.info(f"Failed to create pod {uid}")
-
-
-@kopf.on.update("pods", field="status.phase")
-async def update_opta_ui_pod_status(uid, status, labels, logger, new, **_):
+@kopf.timer("pods", interval=60.0)
+async def update_opta_ui_pod_status(uid, status, labels, logger, **_):
     if not is_valid_opta_pod(labels):
         return
     try:
@@ -168,7 +145,7 @@ async def update_opta_ui_pod_status(uid, status, labels, logger, new, **_):
 
         await update_pod(
             pod_id=uid,
-            status=new,
+            status=status["phase"],
             service_id=service_id,
             image=get_image_from_status(status),
             created_at=created_at or datetime.now().isoformat(),
@@ -178,7 +155,7 @@ async def update_opta_ui_pod_status(uid, status, labels, logger, new, **_):
         logger.info(f"Failed to update pod {uid}")
 
 
-@kopf.on.delete("pods")
+@kopf.on.delete("pods", retries=5)
 async def delete_opta_ui_pod(uid, logger, labels, status, **_):
     if not is_valid_opta_pod(labels):
         return
