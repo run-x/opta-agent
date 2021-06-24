@@ -67,7 +67,10 @@ async def update_pod(
             f"https://{OPTA_DOMAIN}/kube-health/pods",
             json=body,
             headers={"opta": jwt},
-        ):
+        ) as resp:
+            json = await resp.json()
+            if resp.status != 200 and resp.status != 201:
+                raise Exception(f"Invalid response when attempting to validate the api token: {json}")
             return True
 
 
@@ -93,7 +96,10 @@ async def post_event(
             f"https://{OPTA_DOMAIN}/kube-health/events",
             json=body,
             headers={"opta": jwt},
-        ):
+        ) as resp:
+            json = await resp.json()
+            if resp.status != 200 and resp.status != 201:
+                raise Exception(f"Invalid response when attempting to validate the api token: {json}")
             return True
 
 
