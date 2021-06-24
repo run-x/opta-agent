@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+kopf = "1.31.0"
+aiohttp = "3.7.4"
+
+[dev-packages]
+ipython = "*"
+pytest = "*"
+black = "==19.3b0"
+mypy = "*"
+isort = "*"
+flake8 = "*"
+pyyaml = "*"
+coverage = "*"
+alembic-verify = "*"
+pytest-mock = "*"
+pytest-asyncio = "*"
+aioresponses = "*"
+
+[requires]
+python_version = "3.8"

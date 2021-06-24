@@ -1,0 +1,16 @@
+apiVersion: v2
+name: opta-agent
+description: Opta Agent
+version: 0.0.5
+appVersion: 0.0.5
+keywords:
+  - monitoring
+  - alerting
+  - event
+  - metric
+#home: https://opta.dev
+sources:
+  - https://github.com/run-x/opta-agent
+maintainers:
+  - name: Runx
+    email: info@runx.dev
