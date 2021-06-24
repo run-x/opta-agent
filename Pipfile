@@ -16,9 +16,10 @@ isort = "*"
 flake8 = "*"
 pyyaml = "*"
 coverage = "*"
-requests-mock = "*"
 alembic-verify = "*"
 pytest-mock = "*"
+pytest-asyncio = "*"
+aioresponses = "*"
 
 [requires]
 python_version = "3.8"

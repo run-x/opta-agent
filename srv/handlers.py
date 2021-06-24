@@ -14,13 +14,10 @@ def is_valid_opta_pod(labels):
     return labels.get("opta.dev/environment-name") is not None and labels.get("opta.dev/layer-name") is not None
 
 
-async def fetch_jwt() -> Tuple[dict, str]:
-    global OPTA_TOKEN
-    if OPTA_TOKEN == "MISSING":
-        raise Exception("OPTA_TOKEN is not set")
+async def fetch_jwt(api_key: str) -> Tuple[dict, str]:
     async with aiohttp.ClientSession() as session:
         # TODO: add opta auth token
-        async with session.post(f"https://{OPTA_DOMAIN}/user/apikeys/validate", json={"api_key": OPTA_TOKEN}) as resp:
+        async with session.post(f"https://{OPTA_DOMAIN}/user/apikeys/validate", json={"api_key": api_key}) as resp:
             json = await resp.json()
             if resp.status != 200:
                 raise Exception(f"Invalid response when attempting to validate the api token: {json}")
@@ -32,7 +29,7 @@ async def fetch_jwt() -> Tuple[dict, str]:
 
 
 async def get_service(environment_name, service_name):
-    jwt_json, jwt = await fetch_jwt()
+    jwt_json, jwt = await fetch_jwt(OPTA_TOKEN)
     org_id = jwt_json["org_id"]
     async with aiohttp.ClientSession() as session:
         async with session.get(
@@ -53,7 +50,7 @@ async def update_pod(
     updated_at: Optional[str] = None,
     created_at: Optional[str] = None,
 ):
-    jwt_json, jwt = await fetch_jwt()
+    jwt_json, jwt = await fetch_jwt(OPTA_TOKEN)
     org_id = jwt_json["org_id"]
     async with aiohttp.ClientSession() as session:
         body = {
@@ -71,7 +68,7 @@ async def update_pod(
             json=body,
             headers={"opta": jwt},
         ):
-            return
+            return True
 
 
 async def post_event(
@@ -81,7 +78,7 @@ async def post_event(
     timestamp: str = None,
     message: Optional[str] = None,
 ):
-    jwt_json, jwt = await fetch_jwt()
+    jwt_json, jwt = await fetch_jwt(OPTA_TOKEN)
     org_id = jwt_json["org_id"]
     async with aiohttp.ClientSession() as session:
         body = {
@@ -97,7 +94,7 @@ async def post_event(
             json=body,
             headers={"opta": jwt},
         ):
-            return
+            return True
 
 
 """
