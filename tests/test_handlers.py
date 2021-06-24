@@ -1,7 +1,7 @@
-from srv.handlers import OPTA_DOMAIN, fetch_jwt, get_service, post_event, update_pod
-from typing import Any
 import pytest
 from aioresponses import aioresponses
+
+from srv.handlers import OPTA_DOMAIN, fetch_jwt, get_service, post_event, update_pod
 
 TEST_ORG_ID = "afd787b1-c64a-4134-a834-219f10b5acda"
 TEST_ENVIRONMENT_ID = "7044f2d9-50d3-48b7-b466-86830630085c"
@@ -15,21 +15,13 @@ async def test_fetch_jwt():
         fake_key = "fake-key"
         mocked.post(
             f"https://{OPTA_DOMAIN}/user/apikeys/validate",
-            payload={
-                "api_key": fake_key,
-                "org_id": TEST_ORG_ID,
-                "expires_at": None,
-            },
+            payload={"api_key": fake_key, "org_id": TEST_ORG_ID, "expires_at": None},
             headers={"opta": opta_token},
             status=200,
         )
 
         json, jwt = await fetch_jwt(fake_key)
-        assert json == {
-            "api_key": fake_key,
-            "org_id": TEST_ORG_ID,
-            "expires_at": None,
-        }
+        assert json == {"api_key": fake_key, "org_id": TEST_ORG_ID, "expires_at": None}
         assert jwt == opta_token
 
 
@@ -40,11 +32,7 @@ async def test_get_service():
         fake_key = "fake-key"
         mocked.post(
             f"https://{OPTA_DOMAIN}/user/apikeys/validate",
-            payload={
-                "api_key": fake_key,
-                "org_id": TEST_ORG_ID,
-                "expires_at": None,
-            },
+            payload={"api_key": fake_key, "org_id": TEST_ORG_ID, "expires_at": None},
             headers={"opta": opta_token},
             status=200,
         )
@@ -63,7 +51,7 @@ async def test_get_service():
                     "latest_spec": "\n            test: yaml2\n            ",
                     "latest_successful_deploy_time": None,
                     "name": service_name,
-                },
+                }
             ],
             status=200,
         )
@@ -87,11 +75,7 @@ async def test_update_pod():
         fake_key = "fake-key"
         mocked.post(
             f"https://{OPTA_DOMAIN}/user/apikeys/validate",
-            payload={
-                "api_key": fake_key,
-                "org_id": TEST_ORG_ID,
-                "expires_at": None,
-            },
+            payload={"api_key": fake_key, "org_id": TEST_ORG_ID, "expires_at": None},
             headers={"opta": opta_token},
             status=200,
         )
@@ -123,7 +107,7 @@ async def test_update_pod():
             created_at="2020-01-01T00:00:00-08:00",
         )
 
-        assert res == True
+        assert res is True
 
 
 @pytest.mark.asyncio
@@ -133,11 +117,7 @@ async def test_post_event():
         fake_key = "fake-key"
         mocked.post(
             f"https://{OPTA_DOMAIN}/user/apikeys/validate",
-            payload={
-                "api_key": fake_key,
-                "org_id": TEST_ORG_ID,
-                "expires_at": None,
-            },
+            payload={"api_key": fake_key, "org_id": TEST_ORG_ID, "expires_at": None},
             headers={"opta": opta_token},
             status=200,
         )
@@ -148,10 +128,7 @@ async def test_post_event():
                 "event_type": "autoscale",
                 "id": "8859101c-3399-4314-a34f-8185f97eeb51",
                 "message": "scaled from 2 pods to 4 pods",
-                "metadata": {
-                    "old": 2,
-                    "new": 4,
-                },
+                "metadata": {"old": 2, "new": 4},
                 "org_id": "5cc8e35b-c25a-414e-bf98-52bd27c46f4e",
                 "service_id": TEST_SERVICE_ID,
                 "timestamp": "2020-01-01T00:00:00-08:00",
@@ -162,12 +139,9 @@ async def test_post_event():
         res = await post_event(
             service_id=TEST_SERVICE_ID,
             event_type="autoscale",
-            metadata={
-                "old": 2,
-                "new": 4,
-            },
+            metadata={"old": 2, "new": 4},
             timestamp="2020-01-01T00:00:00-08:00",
             message="scaled from 2 pods to 4 pods",
         )
 
-        assert res == True
+        assert res is True

@@ -1,5 +1,5 @@
-from datetime import datetime
 import os
+from datetime import datetime
 from typing import Optional, Tuple
 
 import aiohttp
@@ -63,11 +63,7 @@ async def update_pod(
             "updated_at": updated_at,
             "deleted_at": deleted_at,
         }
-        async with session.put(
-            f"https://{OPTA_DOMAIN}/kube-health/pods",
-            json=body,
-            headers={"opta": jwt},
-        ) as resp:
+        async with session.put(f"https://{OPTA_DOMAIN}/kube-health/pods", json=body, headers={"opta": jwt}) as resp:
             json = await resp.json()
             if resp.status != 200 and resp.status != 201:
                 raise Exception(f"Invalid response when attempting to validate the api token: {json}")
@@ -92,11 +88,7 @@ async def post_event(
             "metadata": metadata,
             "timestamp": timestamp,
         }
-        async with session.post(
-            f"https://{OPTA_DOMAIN}/kube-health/events",
-            json=body,
-            headers={"opta": jwt},
-        ) as resp:
+        async with session.post(f"https://{OPTA_DOMAIN}/kube-health/events", json=body, headers={"opta": jwt}) as resp:
             json = await resp.json()
             if resp.status != 200 and resp.status != 201:
                 raise Exception(f"Invalid response when attempting to validate the api token: {json}")
@@ -194,10 +186,7 @@ async def update_deployment_info(old, new, labels, logger, **_):
         await post_event(
             service_id=service_id,
             event_type="autoscale",
-            metadata={
-                "old": int(old),
-                "new": int(new),
-            },
+            metadata={"old": int(old), "new": int(new)},
             timestamp=datetime.now().isoformat(),
             message=f"scaled from {old} pods to {new} pods",
         )
