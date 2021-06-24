@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Literal, Optional, Tuple
 
 import aiohttp
 import kopf
@@ -49,7 +49,7 @@ async def update_pod(
     deleted_at: Optional[str] = None,
     updated_at: Optional[str] = None,
     created_at: Optional[str] = None,
-):
+) -> Literal[True]:
     jwt_json, jwt = await fetch_jwt(OPTA_TOKEN)
     org_id = jwt_json["org_id"]
     async with aiohttp.ClientSession() as session:
@@ -73,10 +73,10 @@ async def update_pod(
 async def post_event(
     service_id: str,
     event_type: Optional[str],
-    metadata: dict = None,
-    timestamp: str = None,
+    metadata: Optional[dict] = None,
+    timestamp: Optional[str] = None,
     message: Optional[str] = None,
-):
+) -> Literal[True]:
     jwt_json, jwt = await fetch_jwt(OPTA_TOKEN)
     org_id = jwt_json["org_id"]
     async with aiohttp.ClientSession() as session:
