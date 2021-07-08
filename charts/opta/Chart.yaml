@@ -8,7 +8,6 @@ keywords:
   - alerting
   - event
   - metric
-#home: https://opta.dev
 sources:
   - https://github.com/run-x/opta-agent
 maintainers:
