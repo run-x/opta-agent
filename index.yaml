@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  opta-agent:
+  - apiVersion: v2
+    appVersion: 0.0.5
+    created: "2021-07-08T11:04:54.764744-07:00"
+    description: Opta Agent
+    digest: 1bda0738817ca8d98c71797939b2cbd1041436b1c5b2773b484f50117a32ed5a
+    keywords:
+    - monitoring
+    - alerting
+    - event
+    - metric
+    maintainers:
+    - email: info@runx.dev
+      name: Runx
+    name: opta-agent
+    sources:
+    - https://github.com/run-x/opta-agent
+    urls:
+    - https://helm-repo.opta.dev/opta-agent-0.0.5.tgz
+    version: 0.0.5
+generated: "2021-07-08T11:04:54.762877-07:00"
