@@ -46,8 +46,7 @@ jobs:
       - name: Lint
         run: make lint
 
-  docker_push:
-    if: ${{ github.ref == 'refs/heads/main' }}
+  docker:
     needs:
     - python
     - lint
