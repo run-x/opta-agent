@@ -3,9 +3,9 @@ entries:
   opta-agent:
   - apiVersion: v2
     appVersion: 0.0.9
-    created: "2021-07-23T20:53:25.660461251Z"
+    created: "2021-07-23T13:59:41.901046-07:00"
     description: Opta Agent
-    digest: 0b1bfc266ff831393d856239cf5eea9bd7248fef2db7aeb2d7d92cb390f41c62
+    digest: 3f9160837a4e6dfa270b7f8c715bbd61a72b71b9d7fbd5bb5983fd31327617d4
     keywords:
     - monitoring
     - alerting
@@ -20,23 +20,4 @@ entries:
     urls:
     - https://github.com/run-x/opta-agent/releases/download/opta-agent-0.0.9/opta-agent-0.0.9.tgz
     version: 0.0.9
-  - apiVersion: v2
-    appVersion: 0.0.5
-    created: "2021-07-08T11:04:54.764744-07:00"
-    description: Opta Agent
-    digest: 1bda0738817ca8d98c71797939b2cbd1041436b1c5b2773b484f50117a32ed5a
-    keywords:
-    - monitoring
-    - alerting
-    - event
-    - metric
-    maintainers:
-    - email: info@runx.dev
-      name: Runx
-    name: opta-agent
-    sources:
-    - https://github.com/run-x/opta-agent
-    urls:
-    - https://helm-repo.opta.dev/opta-agent-0.0.5.tgz
-    version: 0.0.5
-generated: "2021-07-23T20:53:25.660467951Z"
+generated: "2021-07-23T13:59:41.899542-07:00"
