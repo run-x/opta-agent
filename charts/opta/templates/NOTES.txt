@@ -1,0 +1,21 @@
+{{- if (.Values.optaAgent.token) }}
+An opta agent is spinning up in your cluster. After a few
+minutes, you should see your agent sending data over to the ui with each env:
+    https://app.runx.dev/
+{{- else }}
+##############################################################################
+####               ERROR: You did not set an optaAgent.token              ####
+##############################################################################
+
+This deployment will be incomplete until you get your token from Opta.
+Pls contact the Runx sales team at info@runx.dev
+
+Once registered you can request an API key at:
+
+    https://app.runx.dev/api-keys
+
+Then run:
+
+    helm upgrade {{ .Release.Name }} \
+        --set optaAgent.token=YOUR-KEY-HERE opta/opta-agent
+{{- end }}

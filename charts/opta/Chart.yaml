@@ -1,8 +1,11 @@
 apiVersion: v2
 name: opta-agent
-description: Opta Agent
+description: The Opta Agent to monitor your environment via the opta ui.
+home: https://github.com/run-x/opta-agent
 version: 0.0.9
 appVersion: 0.0.9
+type: application
+kubeVersion: ">= 1.18.0 < 1.22.0"
 keywords:
   - monitoring
   - alerting
@@ -13,3 +16,5 @@ sources:
 maintainers:
   - name: Runx
     email: info@runx.dev
+dependencies: []
+deprecated: false
