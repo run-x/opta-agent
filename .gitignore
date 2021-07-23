@@ -142,3 +142,5 @@ docker_compose_data
 .vscode
 main.tf.json
 terraform.tfstate
+helm-docs
+opta-agent-*.tgz
