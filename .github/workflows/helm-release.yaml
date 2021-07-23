@@ -21,6 +21,6 @@ jobs:
         run: |
           helm repo add opta https://helm-repo.opta.dev
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@master
+        uses: helm/chart-releaser-action@main
         env:
           CR_TOKEN: '${{ secrets.CR_TOKEN }}'
