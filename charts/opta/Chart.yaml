@@ -1,14 +1,13 @@
 apiVersion: v2
 name: opta-agent
 description: Opta Agent
-version: 0.0.5
-appVersion: 0.0.5
+version: 0.0.6
+appVersion: 0.0.6
 keywords:
   - monitoring
   - alerting
   - event
   - metric
-#home: https://opta.dev
 sources:
   - https://github.com/run-x/opta-agent
 maintainers:
