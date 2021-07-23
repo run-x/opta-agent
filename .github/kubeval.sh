@@ -1,7 +1,12 @@
 #!/bin/bash
 set -euo pipefail
+set -x
 
-CHART_DIRS="$(git diff --find-renames --name-only "$(git rev-parse --abbrev-ref HEAD)" remotes/origin/main | grep '[cC]hart.yaml' | sed -e 's#/[Cc]hart.yaml##g')"
+if [[ ${GITHUB_REF##*/} == "main" ]] ; then
+  CHART_DIRS="$(git diff --find-renames --name-only HEAD^ HEAD | grep '[cC]hart.yaml' | sed -e 's#/[Cc]hart.yaml##g')"
+else
+  CHART_DIRS="$(git diff --find-renames --name-only "$(git rev-parse --abbrev-ref HEAD)" remotes/origin/main | grep '[cC]hart.yaml' | sed -e 's#/[Cc]hart.yaml##g')"
+fi
 KUBEVAL_VERSION="0.14.0"
 SCHEMA_LOCATION="https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
 
