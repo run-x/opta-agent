@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-kopf = "1.31.0"
+kopf = "1.35.4"
 aiohttp = "3.7.4"
 
 [dev-packages]
