@@ -3,6 +3,28 @@ entries:
   opta-agent:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2022-04-14T01:26:41.644306109Z"
+    description: The Opta Agent to monitor your environment via the opta ui.
+    digest: 997775defb41446370ecd3f300918329053422e71af3ca8df850d8d70452fb12
+    home: https://github.com/run-x/opta-agent
+    keywords:
+    - monitoring
+    - alerting
+    - event
+    - metric
+    kubeVersion: '>= 1.18.0-0'
+    maintainers:
+    - email: info@runx.dev
+      name: Runx
+    name: opta-agent
+    sources:
+    - https://github.com/run-x/opta-agent
+    type: application
+    urls:
+    - https://github.com/run-x/opta-agent/releases/download/opta-agent-0.1.2/opta-agent-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2022-04-14T01:06:51.244782876Z"
     description: The Opta Agent to monitor your environment via the opta ui.
     digest: 02af2de8631360d7bfa9f1e4c5f519f097e26147d64271e1a8b82344e4664147
@@ -64,4 +86,4 @@ entries:
     urls:
     - https://github.com/run-x/opta-agent/releases/download/opta-agent-0.0.9/opta-agent-0.0.9.tgz
     version: 0.0.9
-generated: "2022-04-14T01:06:51.244819575Z"
+generated: "2022-04-14T01:26:41.644870816Z"
