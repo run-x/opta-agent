@@ -208,4 +208,4 @@ async def update_deployment_info(uid, old, new, labels, logger: Logger, **_):
             message=f"scaled from {old} pods to {new} pods",
         )
     except Exception:
-        logger.error(f"Failed to send replica change event:", exc_info=True)
+        logger.error(f"Failed to send replica change event for deployment {uid}:", exc_info=True)
