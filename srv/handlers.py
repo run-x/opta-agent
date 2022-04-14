@@ -37,6 +37,8 @@ async def get_service(environment_name, service_name):
             headers={"opta": jwt},
         ) as resp:
             json = await resp.json()
+            if len(json) == 0:
+                return None
             service = json[0]
             return service
 
@@ -131,10 +133,16 @@ async def update_opta_ui_pod_status(uid, status, labels, logger, **_):
     if not is_valid_opta_pod(labels):
         return
     try:
+        logger.info(f"Routine check on pod {uid}")
         environment_name = labels.get("opta.dev/environment-name")
         service_name = labels.get("opta.dev/layer-name")
 
         service = await get_service(environment_name, service_name)
+        if service is None:
+            raise Exception(
+                f"No service with name {service_name} found in this environment-- has opta apply been run on it after "
+                "adding the runx module?"
+            )
         service_id = service["id"]
         created_at = get_pod_created_time_from_status(status)
 
@@ -147,7 +155,7 @@ async def update_opta_ui_pod_status(uid, status, labels, logger, **_):
             updated_at=datetime.now().isoformat(),
         )
     except Exception:
-        logger.info(f"Failed to update pod {uid}")
+        logger.error(f"Failed to update pod {uid}:", exc_info=True)
 
 
 @kopf.on.delete("pods", retries=5)
@@ -155,10 +163,16 @@ async def delete_opta_ui_pod(uid, logger, labels, status, **_):
     if not is_valid_opta_pod(labels):
         return
     try:
+        logger.info(f"Deletion detected on pod {uid}")
         environment_name = labels.get("opta.dev/environment-name")
         service_name = labels.get("opta.dev/layer-name")
 
         service = await get_service(environment_name, service_name)
+        if service is None:
+            raise Exception(
+                f"No service with name {service_name} found in this environment-- has opta apply been run on it after "
+                "adding the runx module?"
+            )
         service_id = service["id"]
         created_at = get_pod_created_time_from_status(status)
 
@@ -172,15 +186,21 @@ async def delete_opta_ui_pod(uid, logger, labels, status, **_):
             deleted_at=datetime.now().isoformat(),
         )
     except Exception:
-        logger.info(f"Failed to delete pod {uid}")
+        logger.error(f"Failed to delete pod {uid}:", exc_info=True)
 
 
 @kopf.on.update("deployment", field="spec.replicas")
-async def update_deployment_info(old, new, labels, logger, **_):
+async def update_deployment_info(uid, old, new, labels, logger, **_):
     try:
+        logger.info(f"Replica changed detected on deployment {uid}")
         environment_name = labels.get("opta.dev/environment-name")
         service_name = labels.get("opta.dev/layer-name")
         service = await get_service(environment_name, service_name)
+        if service is None:
+            raise Exception(
+                f"No service with name {service_name} found in this environment-- has opta apply been run on it after "
+                "adding the runx module?"
+            )
         service_id = service["id"]
 
         await post_event(
@@ -190,5 +210,5 @@ async def update_deployment_info(old, new, labels, logger, **_):
             timestamp=datetime.now().isoformat(),
             message=f"scaled from {old} pods to {new} pods",
         )
-    except Exception as e:
-        logger.error(e)
+    except Exception:
+        logger.error(f"Failed to send replica change event for deployment {uid}:", exc_info=True)

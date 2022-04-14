@@ -1,5 +1,7 @@
 optaAgent:
   namespace: "opta-agent"
+  verbose: false
+  debug: false
   token: nil
   image: "runx1/opta-agent:latest"
   containerResourceRequests:
