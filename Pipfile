@@ -8,7 +8,6 @@ kopf = "1.35.4"
 aiohttp = "3.7.4"
 
 [dev-packages]
-ipython = "*"
 pytest = "*"
 black = "==19.3b0"
 mypy = "*"
