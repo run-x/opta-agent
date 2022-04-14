@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from typing import Literal, Optional, Tuple
-from logging import Logger
+
 import aiohttp
 import kopf
 
@@ -129,7 +129,7 @@ def get_pod_created_time_from_status(status):
 
 
 @kopf.timer("pods", interval=60.0)
-async def update_opta_ui_pod_status(uid, status, labels, logger: Logger, **_):
+async def update_opta_ui_pod_status(uid, status, labels, logger, **_):
     if not is_valid_opta_pod(labels):
         return
     try:
@@ -141,7 +141,8 @@ async def update_opta_ui_pod_status(uid, status, labels, logger: Logger, **_):
         if service is None:
             raise Exception(
                 f"No service with name {service_name} found in this environment-- has opta apply been run on it after "
-                "adding the runx module?")
+                "adding the runx module?"
+            )
         service_id = service["id"]
         created_at = get_pod_created_time_from_status(status)
 
@@ -158,7 +159,7 @@ async def update_opta_ui_pod_status(uid, status, labels, logger: Logger, **_):
 
 
 @kopf.on.delete("pods", retries=5)
-async def delete_opta_ui_pod(uid, logger: Logger, labels, status, **_):
+async def delete_opta_ui_pod(uid, logger, labels, status, **_):
     if not is_valid_opta_pod(labels):
         return
     try:
@@ -170,7 +171,8 @@ async def delete_opta_ui_pod(uid, logger: Logger, labels, status, **_):
         if service is None:
             raise Exception(
                 f"No service with name {service_name} found in this environment-- has opta apply been run on it after "
-                "adding the runx module?")
+                "adding the runx module?"
+            )
         service_id = service["id"]
         created_at = get_pod_created_time_from_status(status)
 
@@ -188,7 +190,7 @@ async def delete_opta_ui_pod(uid, logger: Logger, labels, status, **_):
 
 
 @kopf.on.update("deployment", field="spec.replicas")
-async def update_deployment_info(uid, old, new, labels, logger: Logger, **_):
+async def update_deployment_info(uid, old, new, labels, logger, **_):
     try:
         logger.info(f"Replica changed detected on deployment {uid}")
         environment_name = labels.get("opta.dev/environment-name")
@@ -197,7 +199,8 @@ async def update_deployment_info(uid, old, new, labels, logger: Logger, **_):
         if service is None:
             raise Exception(
                 f"No service with name {service_name} found in this environment-- has opta apply been run on it after "
-                "adding the runx module?")
+                "adding the runx module?"
+            )
         service_id = service["id"]
 
         await post_event(
