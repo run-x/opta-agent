@@ -27,6 +27,14 @@ spec:
               protocol: TCP
               containerPort: 8080
           env:
+            {{- if .Values.optaAgent.verbose }}
+            - name: VERBOSE
+              value: "true"
+            {{- end }}
+            {{- if .Values.optaAgent.debug }}
+            - name: DEBUG
+              value: "true"
+            {{- end }}
             - name: OPTA_TOKEN
               valueFrom:
                 secretKeyRef:
