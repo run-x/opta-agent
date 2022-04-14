@@ -9,7 +9,7 @@ aiohttp = "3.7.4"
 
 [dev-packages]
 pytest = "*"
-black = "==19.3b0"
+black = "19.10b0"
 mypy = "*"
 isort = "*"
 flake8 = "*"
