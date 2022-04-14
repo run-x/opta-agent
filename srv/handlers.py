@@ -153,7 +153,7 @@ async def update_opta_ui_pod_status(uid, status, labels, logger: Logger, **_):
             created_at=created_at or datetime.now().isoformat(),
             updated_at=datetime.now().isoformat(),
         )
-    except Exception as e:
+    except Exception:
         logger.error(f"Failed to update pod {uid}:", exc_info=True)
 
 
@@ -183,7 +183,7 @@ async def delete_opta_ui_pod(uid, logger: Logger, labels, status, **_):
             updated_at=datetime.now().isoformat(),
             deleted_at=datetime.now().isoformat(),
         )
-    except Exception as e:
+    except Exception:
         logger.error(f"Failed to delete pod {uid}:", exc_info=True)
 
 
@@ -207,5 +207,5 @@ async def update_deployment_info(uid, old, new, labels, logger: Logger, **_):
             timestamp=datetime.now().isoformat(),
             message=f"scaled from {old} pods to {new} pods",
         )
-    except Exception as e:
+    except Exception:
         logger.error(f"Failed to send replica change event:", exc_info=True)
